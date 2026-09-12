@@ -7,7 +7,7 @@
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
-<body class="bg-slate-100 text-slate-800 p-3 sm:p-6">
+<body class="bg-slate-100 text-slate-800 p-3 sm:p-6 font-sans">
 
   <div class="max-w-7xl mx-auto space-y-6">
 
@@ -27,7 +27,7 @@
       </div>
     </div>
 
-    <!-- HIZLI SİPARİŞ GİRİŞ FORMU (Numbers Yerine) -->
+    <!-- HIZLI SİPARİŞ GİRİŞ FORMU -->
     <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm space-y-4">
       <h2 class="text-sm font-bold text-red-600 uppercase tracking-wider flex items-center gap-2">
         <span>📋 Yeni Sipariş Ekle</span>
@@ -44,7 +44,7 @@
       </div>
     </div>
 
-    <!-- SİPARİŞ VE SEVKİYAT TABLOSU (Numbers Görünümü) -->
+    <!-- SİPARİŞ VE SEVKİYAT TABLOSU -->
     <div class="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden space-y-4 p-5">
       <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 border-b pb-4">
         <h2 class="text-base font-bold text-slate-900">📦 Sipariş & Sevkiyat Listesi</h2>
@@ -84,20 +84,20 @@
       <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 border-b pb-4">
         <div>
           <h2 class="text-base font-bold text-slate-900">⚖️ Güncel Depo Stokları</h2>
-          <p class="text-xs text-slate-500">Teslim edilen siparişler bu stoklardan otomatik düşer</p>
+          <p class="text-xs text-slate-500">Kahveler ve ambalaj malzemeleri (Teslim edilen siparişler bu listeden otomatik düşer)</p>
         </div>
         <div class="flex gap-2 w-full sm:w-auto">
-          <input id="stokArama" oninput="stoklariGoster()" type="text" placeholder="Stokta ara..." class="border p-2 rounded-lg text-xs w-full sm:w-48 outline-none focus:ring-1 focus:ring-slate-400">
+          <input id="stokArama" oninput="stoklariGoster()" type="text" placeholder="Stokta ara..." class="border p-2 rounded-lg text-xs w-full sm:w-48 outline-none focus:ring-2 focus:ring-slate-400">
         </div>
       </div>
 
       <!-- Yeni Stok Kalemi Ekleme Formu -->
       <div class="grid grid-cols-2 md:grid-cols-5 gap-2 bg-slate-50 p-3 rounded-lg border border-slate-200">
-        <input id="stokAd" type="text" placeholder="Ürün / Çekirdek Adı" class="border p-2 rounded text-xs">
-        <input id="stokKategori" type="text" placeholder="Kategori (Blend, Single, Paket)" class="border p-2 rounded text-xs">
-        <input id="stokMiktar" type="number" step="any" placeholder="Miktar" class="border p-2 rounded text-xs">
-        <input id="stokBirim" type="text" placeholder="Birim (kg, adet)" value="kg" class="border p-2 rounded text-xs">
-        <button onclick="yeniStokEkle()" class="col-span-2 md:col-span-1 bg-slate-900 hover:bg-slate-800 text-white rounded text-xs font-bold py-2">
+        <input id="stokAd" type="text" placeholder="Ürün Adı (ESP-R, Valfli Paket)" class="border p-2 rounded text-xs outline-none">
+        <input id="stokKategori" type="text" placeholder="Kategori (Blend, Single, Paket)" class="border p-2 rounded text-xs outline-none">
+        <input id="stokMiktar" type="number" step="any" placeholder="Başlangıç Stoğu" class="border p-2 rounded text-xs outline-none">
+        <input id="stokBirim" type="text" placeholder="Birim (kg, adet, paket)" value="kg" class="border p-2 rounded text-xs outline-none">
+        <button onclick="yeniStokEkle()" class="col-span-2 md:col-span-1 bg-slate-900 hover:bg-slate-800 text-white rounded text-xs font-bold py-2 transition">
           + Stoğa Tanımla
         </button>
       </div>
@@ -109,7 +109,7 @@
               <th class="p-3">Ürün Adı</th>
               <th class="p-3">Kategori</th>
               <th class="p-3">Kalan Stok</th>
-              <th class="p-3 text-right">Manuel Düzeltme</th>
+              <th class="p-3 text-right">İşlemler</th>
             </tr>
           </thead>
           <tbody id="stokTablosu" class="divide-y divide-slate-100">
@@ -133,6 +133,48 @@
 
   </div>
 
+  <!-- HER ÜRÜN İÇİN DETAYLI DÜZENLEME PENCERESİ (MODAL) -->
+  <div id="duzenleModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-xs hidden flex items-center justify-center p-4 z-50">
+    <div class="bg-white rounded-2xl max-w-md w-full p-6 shadow-2xl border border-slate-200 space-y-4">
+      <div class="flex justify-between items-center border-b pb-3">
+        <h3 class="font-bold text-base text-slate-900">✏️ Ürün Bilgilerini Düzenle</h3>
+        <button onclick="modalKapat()" class="text-slate-400 hover:text-slate-700 font-bold text-lg">✕</button>
+      </div>
+      
+      <input type="hidden" id="editId">
+
+      <div class="space-y-3 text-xs">
+        <div>
+          <label class="font-semibold text-slate-600 block mb-1">Ürün Adı</label>
+          <input id="editUrunAdi" type="text" class="w-full border p-2.5 rounded-lg text-sm font-medium outline-none focus:ring-2 focus:ring-indigo-500">
+        </div>
+        <div>
+          <label class="font-semibold text-slate-600 block mb-1">Kategori</label>
+          <input id="editKategori" type="text" placeholder="Blend, Single, Ambalaj vb." class="w-full border p-2.5 rounded-lg text-sm font-medium outline-none focus:ring-2 focus:ring-indigo-500">
+        </div>
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="font-semibold text-slate-600 block mb-1">Mevcut Stok Miktarı</label>
+            <input id="editMiktar" type="number" step="any" class="w-full border p-2.5 rounded-lg text-sm font-bold outline-none focus:ring-2 focus:ring-indigo-500">
+          </div>
+          <div>
+            <label class="font-semibold text-slate-600 block mb-1">Birim</label>
+            <input id="editBirim" type="text" placeholder="kg, adet, paket..." class="w-full border p-2.5 rounded-lg text-sm font-bold text-indigo-700 outline-none focus:ring-2 focus:ring-indigo-500">
+          </div>
+        </div>
+      </div>
+
+      <div class="flex gap-2 pt-2">
+        <button onclick="modalKapat()" class="w-1/2 py-2.5 border border-slate-300 rounded-lg text-xs font-bold text-slate-600 hover:bg-slate-50 transition">
+          Vazgeç
+        </button>
+        <button onclick="stokKaydet()" class="w-1/2 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg text-xs font-bold transition shadow-sm">
+          💾 Değişiklikleri Kaydet
+        </button>
+      </div>
+    </div>
+  </div>
+
   <script>
     const SUPABASE_URL = 'https://ceudimgemohiqdttspxv.supabase.co';
     const SUPABASE_KEY = 'sb_publishable_kJhrwGIetiN9Aa_TpzqAVw_wo8Zwd2w';
@@ -142,12 +184,11 @@
     let tumStoklar = [];
     let seciliTab = 'hepsi';
 
-    // Verileri Başlat
     async function verileriGetir() {
       await Promise.all([siparisleriYukle(), stoklariYukle(), loglariYukle()]);
     }
 
-    // 1. SİPARİŞ İŞLEMLERİ
+    // --- SİPARİŞ İŞLEMLERİ ---
     async function siparisleriYukle() {
       const { data, error } = await db.from('siparisler').select('*').order('id', { ascending: false });
       if (error) return console.error('Sipariş getirme hatası:', error);
@@ -245,34 +286,28 @@
       }
     }
 
-    // Durum Değiştiğinde Otomatik Stok Düşümü
     async function durumDegistir(id, yeniDurum) {
       const sip = tumSiparisler.find(x => x.id === id);
       if (!sip) return;
 
-      // Eğer "Teslim edildi"ye çekildiyse ve daha önce stok düşülmediyse:
       if (yeniDurum === 'Teslim edildi' && !sip.stok_dustu_mu) {
-        // İlgili ürünü stoklar tablosunda ara
         const eslesenStok = tumStoklar.find(s => s.urun_adi.toLowerCase().trim() === sip.urun.toLowerCase().trim());
 
         if (eslesenStok) {
           const yeniStokMiktari = eslesenStok.miktar - sip.miktar_kg;
           await db.from('stoklar').update({ miktar: yeniStokMiktari }).eq('id', eslesenStok.id);
 
-          // Log kaydet
           await db.from('stok_hareketleri').insert([{
             urun_adi: sip.urun,
             islem: `Sevkiyat (${sip.firma})`,
             miktar: sip.miktar_kg
           }]);
 
-          // Siparişi stok_dustu_mu = true olarak işaretle
           await db.from('siparisler').update({ durum: yeniDurum, stok_dustu_mu: true }).eq('id', id);
           alert(`✅ "${sip.firma}" sevkiyatı tamamlandı!\n"${eslesenStok.urun_adi}" stoğundan ${sip.miktar_kg} kg otomatik düşüldü.`);
         } else {
-          // Stoklarda birebir aynı isimde ürün bulunamadıysa uyar ama durumu yine de güncelle
           await db.from('siparisler').update({ durum: yeniDurum }).eq('id', id);
-          alert(`⚠️ Sipariş teslim edildi yapıldı; ancak Depo Stokları tablosunda "${sip.urun}" adında birebir ürün bulunamadığı için stoktan otomatik düşülemedi. Stok adını kontrol edebilirsiniz.`);
+          alert(`⚠️ Sipariş teslim edildi yapıldı; ancak Depo Stokları tablosunda "${sip.urun}" adında birebir ürün bulunamadığı için stoktan otomatik düşülemedi.`);
         }
       } else {
         await db.from('siparisler').update({ durum: yeniDurum }).eq('id', id);
@@ -291,7 +326,7 @@
       siparisleriYukle();
     }
 
-    // 2. STOK İŞLEMLERİ
+    // --- STOK İŞLEMLERİ ---
     async function stoklariYukle() {
       const { data } = await db.from('stoklar').select('*').order('urun_adi', { ascending: true });
       tumStoklar = data || [];
@@ -309,13 +344,17 @@
         if (s.kritik_seviye && s.miktar <= s.kritik_seviye) kritikSayi++;
 
         tablo.innerHTML += `
-          <tr class="hover:bg-slate-50">
+          <tr class="hover:bg-slate-50 transition">
             <td class="p-3 font-bold text-slate-800">${s.urun_adi}</td>
             <td class="p-3 text-slate-500">${s.kategori || '-'}</td>
-            <td class="p-3 font-black text-slate-900 text-sm">${s.miktar} <span class="text-xs font-normal text-slate-500">${s.birim || 'kg'}</span></td>
-            <td class="p-3 text-right space-x-1 whitespace-nowrap">
-              <button onclick="stokManuelAyar(${s.id}, ${s.miktar + 5})" class="px-2 py-1 bg-slate-100 hover:bg-slate-200 rounded font-bold text-xs">+5</button>
-              <button onclick="stokManuelAyar(${s.id}, ${s.miktar - 5})" class="px-2 py-1 bg-slate-100 hover:bg-slate-200 rounded font-bold text-xs">-5</button>
+            <td class="p-3 font-black text-slate-900 text-sm">
+              ${s.miktar} <span class="text-xs font-bold text-indigo-600 bg-indigo-50 px-2 py-0.5 rounded border border-indigo-200">${s.birim || 'kg'}</span>
+            </td>
+            <td class="p-3 text-right space-x-1.5 whitespace-nowrap">
+              <button onclick="stokManuelAyar(${s.id}, ${s.miktar + 5})" class="px-2 py-1 bg-slate-100 hover:bg-slate-200 rounded font-bold text-xs text-slate-700">+5</button>
+              <button onclick="stokManuelAyar(${s.id}, ${s.miktar - 5})" class="px-2 py-1 bg-slate-100 hover:bg-slate-200 rounded font-bold text-xs text-slate-700">-5</button>
+              <button onclick="modalAc(${s.id})" class="px-2.5 py-1 bg-indigo-50 hover:bg-indigo-100 text-indigo-700 border border-indigo-200 rounded font-semibold text-xs">✏️ Düzenle</button>
+              <button onclick="stokKalemiSil(${s.id}, '${s.urun_adi}')" class="px-2 py-1 bg-red-50 hover:bg-red-100 text-red-600 border border-red-200 rounded font-bold text-xs">🗑️</button>
             </td>
           </tr>
         `;
@@ -328,6 +367,56 @@
       } else {
         sayac.classList.add('hidden');
       }
+    }
+
+    // --- MODAL AÇ / KAPAT / KAYDET FONKSİYONLARI ---
+    function modalAc(id) {
+      const urun = tumStoklar.find(u => u.id === id);
+      if (!urun) return;
+
+      document.getElementById('editId').value = urun.id;
+      document.getElementById('editUrunAdi').value = urun.urun_adi;
+      document.getElementById('editKategori').value = urun.kategori || '';
+      document.getElementById('editMiktar').value = urun.miktar;
+      document.getElementById('editBirim').value = urun.birim || 'kg';
+
+      document.getElementById('duzenleModal').classList.remove('hidden');
+    }
+
+    function modalKapat() {
+      document.getElementById('duzenleModal').classList.add('hidden');
+    }
+
+    async function stokKaydet() {
+      const id = document.getElementById('editId').value;
+      const urun_adi = document.getElementById('editUrunAdi').value.trim();
+      const kategori = document.getElementById('editKategori').value.trim();
+      const miktar = parseFloat(document.getElementById('editMiktar').value);
+      const birim = document.getElementById('editBirim').value.trim();
+
+      if (!urun_adi || isNaN(miktar)) {
+        return alert('Ürün adı ve miktar boş bırakılamaz.');
+      }
+
+      const { error } = await db.from('stoklar').update({
+        urun_adi,
+        kategori,
+        miktar,
+        birim
+      }).eq('id', id);
+
+      if (error) {
+        alert('Hata oluştu: ' + error.message);
+      } else {
+        modalKapat();
+        stoklariYukle();
+      }
+    }
+
+    async function stokKalemiSil(id, urunAdi) {
+      if (!confirm(`"${urunAdi}" kaydını tamamen silmek istediğinize emin misiniz?`)) return;
+      await db.from('stoklar').delete().eq('id', id);
+      stoklariYukle();
     }
 
     async function yeniStokEkle() {
@@ -351,7 +440,7 @@
       stoklariYukle();
     }
 
-    // 3. LOG İŞLEMLERİ
+    // --- LOG İŞLEMLERİ ---
     async function loglariYukle() {
       const { data } = await db.from('stok_hareketleri').select('*').order('id', { ascending: false }).limit(6);
       const tablo = document.getElementById('logTablosu');
