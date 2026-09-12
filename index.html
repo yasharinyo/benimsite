@@ -2,229 +2,229 @@
 <html lang="tr">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Lot Coffee Roastery - Stok & Sipariş Takip</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="theme-color" content="#dc2626">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="Lot Roastery">
+  <title>Lot Coffee Roastery - Stok & Sipariş</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <style>
+    /* Mobilde inputlara odaklanınca Safari yakınlaştırmasını önleme */
+    input, select, textarea { font-size: 16px !important; }
+    @media (min-width: 640px) {
+      input, select, textarea { font-size: 0.875rem !important; }
+    }
+  </style>
 </head>
-<body class="bg-slate-100 text-slate-800 p-3 sm:p-6 font-sans">
+<body class="bg-slate-100 text-slate-800 p-2 sm:p-6 font-sans antialiased">
 
-  <div class="max-w-7xl mx-auto space-y-6">
+  <div class="max-w-7xl mx-auto space-y-4 sm:space-y-6 pb-12">
 
-    <!-- Üst Başlık & Sistem Durumu -->
-    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center bg-white p-5 rounded-xl border border-slate-200 shadow-sm gap-4">
+    <!-- ÜST BAŞLIK -->
+    <div class="flex justify-between items-center bg-white p-4 sm:p-5 rounded-2xl border border-slate-200 shadow-sm">
       <div>
-        <h1 class="text-2xl font-black tracking-tight text-slate-900">☕ LOT COFFEE ROASTERY</h1>
-        <p class="text-xs text-slate-500 font-medium mt-0.5">Şirket, Online & Çekirdek Stok Takip Paneli</p>
+        <h1 class="text-lg sm:text-2xl font-black tracking-tight text-slate-900">☕ LOT ROASTERY</h1>
+        <p class="text-[11px] sm:text-xs text-slate-500 font-medium">Stok & Sipariş Takip Paneli</p>
       </div>
-      <div class="flex items-center gap-3">
-        <span id="kritikSayac" class="text-xs font-bold px-3 py-1.5 bg-red-100 text-red-700 rounded-lg hidden animate-pulse">
-          ⚠️ 0 Ürün Kritik
+      <div class="flex items-center gap-2">
+        <span id="kritikSayac" class="text-[10px] sm:text-xs font-bold px-2.5 py-1 bg-red-100 text-red-700 rounded-lg hidden animate-pulse">
+          ⚠️ 0 Kritik
         </span>
-        <span class="text-xs font-semibold px-3 py-1.5 bg-emerald-100 text-emerald-700 rounded-lg">
-          ● Sistem Aktif
+        <span class="text-[10px] sm:text-xs font-semibold px-2.5 py-1 bg-emerald-100 text-emerald-700 rounded-lg">
+          ● Aktif
         </span>
       </div>
     </div>
 
-    <!-- SİPARİŞ GİRİŞ FORMU -->
-    <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm space-y-4">
-      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b pb-3">
-        <h2 class="text-sm font-bold text-red-600 uppercase tracking-wider flex items-center gap-2">
-          <span>📋 Yeni Sipariş Girişi</span>
+    <!-- SİPARİŞ GİRİŞ ALANI -->
+    <div class="bg-white p-4 sm:p-5 rounded-2xl border border-slate-200 shadow-sm space-y-3 sm:space-y-4">
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 border-b pb-3">
+        <h2 class="text-xs sm:text-sm font-bold text-red-600 uppercase tracking-wider flex items-center gap-1.5">
+          <span>📋 Yeni Sipariş Ekle</span>
         </h2>
 
         <!-- ŞİRKET / ONLINE SEÇİCİ -->
-        <div class="inline-flex p-1 bg-slate-100 rounded-xl border border-slate-200">
-          <button id="formTurSirket" onclick="formTuruDegistir('sirket')" class="px-4 py-1.5 text-xs font-bold rounded-lg bg-white shadow-xs text-slate-900 transition">
+        <div class="grid grid-cols-2 p-1 bg-slate-100 rounded-xl border border-slate-200 text-center">
+          <button id="formTurSirket" onclick="formTuruDegistir('sirket')" class="py-2 px-3 text-xs font-bold rounded-lg bg-white shadow-xs text-slate-900 transition">
             🏢 Şirket (Toptan)
           </button>
-          <button id="formTurOnline" onclick="formTuruDegistir('online')" class="px-4 py-1.5 text-xs font-bold rounded-lg text-slate-500 hover:text-slate-900 transition">
+          <button id="formTurOnline" onclick="formTuruDegistir('online')" class="py-2 px-3 text-xs font-bold rounded-lg text-slate-500 hover:text-slate-900 transition">
             🌐 Online Sipariş
           </button>
         </div>
       </div>
       
-      <!-- 1. Satır: Müşteri/Firma & Kahve Bilgisi -->
-      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3">
-        <input id="sipFirma" type="text" placeholder="Firma Adı *" class="border border-slate-200 p-2.5 rounded-lg text-sm font-medium focus:ring-2 focus:ring-red-500 outline-none">
+      <!-- Giriş Formu -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-2.5">
+        <input id="sipFirma" type="text" placeholder="Firma Adı *" class="border border-slate-200 p-3 sm:p-2.5 rounded-xl font-medium focus:ring-2 focus:ring-red-500 outline-none">
         
-        <!-- Kahve Seçimi -->
-        <input id="sipUrun" list="kahveListesi" placeholder="Kahve Adı (Levi, ESP-R vb.) *" class="border border-slate-200 p-2.5 rounded-lg text-sm font-medium focus:ring-2 focus:ring-red-500 outline-none">
+        <input id="sipUrun" list="kahveListesi" placeholder="Kahve Adı (Levi, ESP-R) *" class="border border-slate-200 p-3 sm:p-2.5 rounded-xl font-medium focus:ring-2 focus:ring-red-500 outline-none">
         <datalist id="kahveListesi"></datalist>
 
-        <!-- Miktar ve Birim (gr / kg) -->
-        <div class="flex gap-1.5">
-          <input id="sipMiktar" type="number" step="any" placeholder="Miktar *" class="w-2/3 border border-slate-200 p-2.5 rounded-lg text-sm font-bold focus:ring-2 focus:ring-red-500 outline-none">
-          <select id="sipBirim" class="w-1/3 border border-slate-200 p-2.5 rounded-lg text-sm font-bold bg-slate-50 outline-none cursor-pointer">
+        <div class="flex gap-2">
+          <input id="sipMiktar" type="number" step="any" placeholder="Miktar *" class="w-2/3 border border-slate-200 p-3 sm:p-2.5 rounded-xl font-bold focus:ring-2 focus:ring-red-500 outline-none">
+          <select id="sipBirim" class="w-1/3 border border-slate-200 p-3 sm:p-2.5 rounded-xl font-bold bg-slate-50 outline-none cursor-pointer">
             <option value="gr">gr</option>
             <option value="kg">kg</option>
           </select>
         </div>
 
-        <input id="sipTip" type="text" placeholder="Öğütüm / Tip (Çekirdek, Filtre)" class="border border-slate-200 p-2.5 rounded-lg text-sm focus:ring-2 focus:ring-red-500 outline-none">
-        <input id="sipHedefTarih" type="text" placeholder="Hedef / Kargo Tarihi" class="border border-slate-200 p-2.5 rounded-lg text-sm focus:ring-2 focus:ring-red-500 outline-none">
+        <input id="sipTip" type="text" placeholder="Öğütüm / Tip (Çekirdek, Filtre)" class="border border-slate-200 p-3 sm:p-2.5 rounded-xl focus:ring-2 focus:ring-red-500 outline-none">
+        <input id="sipHedefTarih" type="text" placeholder="Hedef / Kargo Tarihi" class="border border-slate-200 p-3 sm:p-2.5 rounded-xl focus:ring-2 focus:ring-red-500 outline-none">
       </div>
 
-      <!-- 2. Satır: Ambalaj / Etiket Seçimi -->
-      <div class="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-5 gap-3 pt-1 border-t border-slate-100 items-center">
+      <!-- Ambalaj & Kaydet Satırı -->
+      <div class="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-5 gap-2.5 pt-2 border-t border-slate-100 items-end">
         <div class="sm:col-span-2">
-          <label class="block text-[11px] font-bold text-slate-500 mb-1">📦 Özel Ambalaj / Etiket (Boş bırakırsan 250g etiketleri sistem otomatik düşer)</label>
-          <select id="sipPaketUrun" class="w-full border border-slate-200 p-2 rounded-lg text-xs font-semibold bg-slate-50 outline-none cursor-pointer">
+          <label class="block text-[11px] font-bold text-slate-500 mb-1">📦 Özel Ambalaj (Boşsa 250g etiket otomatik düşer)</label>
+          <select id="sipPaketUrun" class="w-full border border-slate-200 p-3 sm:p-2 rounded-xl text-xs font-semibold bg-slate-50 outline-none cursor-pointer">
             <option value="">-- Otomatik Eşleştir (Etiketi Sistem Bulsun) --</option>
           </select>
         </div>
         <div>
-          <label class="block text-[11px] font-bold text-slate-500 mb-1">Manuel Adet</label>
-          <input id="sipPaketAdet" type="number" min="0" placeholder="Boş = Otomatik" class="w-full border border-slate-200 p-2 rounded-lg text-xs font-bold outline-none">
+          <label class="block text-[11px] font-bold text-slate-500 mb-1">Adet</label>
+          <input id="sipPaketAdet" type="number" min="0" placeholder="Boş = Otomatik" class="w-full border border-slate-200 p-3 sm:p-2 rounded-xl text-xs font-bold outline-none">
         </div>
-        <div class="sm:col-span-3 lg:col-span-2 flex items-end">
-          <button onclick="siparisEkle()" class="w-full bg-red-600 hover:bg-red-700 text-white rounded-lg text-sm font-bold transition shadow-sm py-2.5 mt-auto">
+        <div class="sm:col-span-3 lg:col-span-2">
+          <button onclick="siparisEkle()" class="w-full bg-red-600 active:scale-98 hover:bg-red-700 text-white rounded-xl text-sm font-bold transition shadow-sm py-3 sm:py-2.5">
             + Siparişi Kaydet
           </button>
         </div>
       </div>
     </div>
 
-    <!-- SİPARİŞ VE SEVKİYAT LİSTESİ (ŞİRKET & ONLINE AYRI SEKMELER) -->
-    <div class="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden space-y-4 p-5">
+    <!-- SİPARİŞ LİSTESİ -->
+    <div class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden p-4 sm:p-5 space-y-3">
       
-      <!-- Ana Sekme: Şirket vs Online -->
-      <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 border-b pb-4">
-        <div class="flex items-center gap-2">
-          <button onclick="listeTuruDegistir('sirket')" id="tabAnaSirket" class="px-4 py-2 text-sm font-extrabold rounded-xl bg-slate-900 text-white shadow-xs transition">
-            🏢 Şirket Siparişleri
+      <!-- Şirket / Online Sekmeleri -->
+      <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 border-b pb-3">
+        <div class="grid grid-cols-2 w-full sm:w-auto gap-2">
+          <button onclick="listeTuruDegistir('sirket')" id="tabAnaSirket" class="py-2.5 px-4 text-xs sm:text-sm font-black rounded-xl bg-slate-900 text-white shadow-xs transition">
+            🏢 Şirket
           </button>
-          <button onclick="listeTuruDegistir('online')" id="tabAnaOnline" class="px-4 py-2 text-sm font-extrabold rounded-xl bg-slate-100 text-slate-600 hover:bg-slate-200 transition">
-            🌐 Online Siparişler
+          <button onclick="listeTuruDegistir('online')" id="tabAnaOnline" class="py-2.5 px-4 text-xs sm:text-sm font-black rounded-xl bg-slate-100 text-slate-600 hover:bg-slate-200 transition">
+            🌐 Online
           </button>
         </div>
 
-        <!-- Durum Filtreleri -->
-        <div class="flex gap-1.5">
-          <button onclick="durumFiltreSec('hepsi')" id="filtreHepsi" class="px-2.5 py-1 text-xs font-bold rounded-lg bg-slate-800 text-white">Tümü</button>
-          <button onclick="durumFiltreSec('Sipariş')" id="filtreSiparis" class="px-2.5 py-1 text-xs font-bold rounded-lg bg-slate-100 text-slate-600 hover:bg-slate-200">Sipariş</button>
-          <button onclick="durumFiltreSec('Paketlendi')" id="filtrePaket" class="px-2.5 py-1 text-xs font-bold rounded-lg bg-slate-100 text-slate-600 hover:bg-slate-200">Paketlendi</button>
-          <button onclick="durumFiltreSec('Teslim edildi')" id="filtreTeslim" class="px-2.5 py-1 text-xs font-bold rounded-lg bg-slate-100 text-slate-600 hover:bg-slate-200">Teslim Edildi</button>
+        <!-- Durum Filtre Butonları -->
+        <div class="flex w-full sm:w-auto overflow-x-auto pb-1 sm:pb-0 gap-1.5 no-scrollbar">
+          <button onclick="durumFiltreSec('hepsi')" id="filtreHepsi" class="px-3 py-1.5 text-xs font-bold rounded-lg bg-slate-800 text-white shrink-0">Tümü</button>
+          <button onclick="durumFiltreSec('Sipariş')" id="filtreSiparis" class="px-3 py-1.5 text-xs font-bold rounded-lg bg-slate-100 text-slate-600 shrink-0">Sipariş</button>
+          <button onclick="durumFiltreSec('Paketlendi')" id="filtrePaket" class="px-3 py-1.5 text-xs font-bold rounded-lg bg-slate-100 text-slate-600 shrink-0">Paketlendi</button>
+          <button onclick="durumFiltreSec('Teslim edildi')" id="filtreTeslim" class="px-3 py-1.5 text-xs font-bold rounded-lg bg-slate-100 text-slate-600 shrink-0">Teslim Edildi</button>
         </div>
       </div>
 
-      <!-- Tablo Alanı -->
-      <div class="overflow-x-auto">
-        <table class="w-full text-left border-collapse">
+      <!-- Tablo (Yatay Kaydırma Destekli) -->
+      <div class="overflow-x-auto -mx-4 sm:mx-0">
+        <table class="w-full text-left border-collapse min-w-[700px]">
           <thead>
-            <tr class="bg-red-600 text-white text-xs uppercase font-bold tracking-wider">
+            <tr class="bg-red-600 text-white text-[11px] uppercase font-bold tracking-wider">
               <th class="p-3">Tarih</th>
               <th id="kolonBaslikFirma" class="p-3">Firma</th>
               <th class="p-3 text-center">Miktar</th>
               <th class="p-3">Ürün</th>
-              <th class="p-3">Düşen Etiket / Paket</th>
-              <th class="p-3">Ürün Tipi</th>
-              <th class="p-3 text-center">Teslim Durumu</th>
-              <th class="p-3">Hedef</th>
+              <th class="p-3">Düşen Paket / Etiket</th>
+              <th class="p-3">Tip</th>
+              <th class="p-3 text-center">Durum</th>
               <th class="p-3 text-center">Fatura</th>
               <th class="p-3 text-center">SKALA</th>
-              <th class="p-3 text-right">İşlem</th>
+              <th class="p-3 text-right">Sil</th>
             </tr>
           </thead>
-          <tbody id="siparisTablosu" class="divide-y divide-slate-200 text-xs font-medium">
-            <!-- Sipariş verileri -->
-          </tbody>
+          <tbody id="siparisTablosu" class="divide-y divide-slate-200 text-xs font-medium"></tbody>
         </table>
       </div>
     </div>
 
-    <!-- GÜNCEL DEPO STOKLARI -->
-    <div class="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden p-5 space-y-4">
-      <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 border-b pb-4">
+    <!-- DEPO STOKLARI -->
+    <div class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden p-4 sm:p-5 space-y-3">
+      <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 border-b pb-3">
         <div>
-          <h2 class="text-base font-bold text-slate-900">⚖️ Güncel Depo Stokları</h2>
-          <p class="text-xs text-slate-500">Ortak Çekirdek ve Etiket Deposu (Her iki kanaldan gelen siparişler de buradan düşer)</p>
+          <h2 class="text-sm sm:text-base font-bold text-slate-900">⚖️ Güncel Depo Stokları</h2>
+          <p class="text-[11px] text-slate-500">Çekirdekler ve 250g Etiketleri</p>
         </div>
-        <div class="flex gap-2 w-full sm:w-auto">
-          <input id="stokArama" oninput="stoklariGoster()" type="text" placeholder="Stokta ara..." class="border p-2 rounded-lg text-xs w-full sm:w-48 outline-none focus:ring-2 focus:ring-slate-400">
-        </div>
+        <input id="stokArama" oninput="stoklariGoster()" type="text" placeholder="Stokta ara..." class="border p-2.5 sm:p-2 rounded-xl text-xs w-full sm:w-48 outline-none focus:ring-2 focus:ring-slate-400">
       </div>
 
-      <!-- Yeni Stok Kalemi Ekleme Formu -->
-      <div class="grid grid-cols-2 md:grid-cols-5 gap-2 bg-slate-50 p-3 rounded-lg border border-slate-200">
-        <input id="stokAd" type="text" placeholder="Ürün Adı (ESP-R, Levi 250g Etiket)" class="border p-2 rounded text-xs outline-none">
-        <input id="stokKategori" type="text" placeholder="Kategori (Blend, 250g Etiket)" class="border p-2 rounded text-xs outline-none">
-        <input id="stokMiktar" type="number" step="any" placeholder="Miktar" class="border p-2 rounded text-xs outline-none">
-        <input id="stokBirim" type="text" placeholder="Birim (kg, adet)" value="kg" class="border p-2 rounded text-xs outline-none">
-        <button onclick="yeniStokEkle()" class="col-span-2 md:col-span-1 bg-slate-900 hover:bg-slate-800 text-white rounded text-xs font-bold py-2 transition">
-          + Stoğa Tanımla
+      <!-- Hızlı Stok Kalemi Tanımlama -->
+      <div class="grid grid-cols-2 sm:grid-cols-5 gap-2 bg-slate-50 p-3 rounded-xl border border-slate-200">
+        <input id="stokAd" type="text" placeholder="Ürün Adı" class="border p-2 rounded-lg text-xs outline-none">
+        <input id="stokKategori" type="text" placeholder="Kategori" class="border p-2 rounded-lg text-xs outline-none">
+        <input id="stokMiktar" type="number" step="any" placeholder="Miktar" class="border p-2 rounded-lg text-xs outline-none">
+        <input id="stokBirim" type="text" placeholder="Birim (kg, adet)" value="kg" class="border p-2 rounded-lg text-xs outline-none">
+        <button onclick="yeniStokEkle()" class="col-span-2 sm:col-span-1 bg-slate-900 text-white rounded-lg text-xs font-bold py-2">
+          + Stoğa Ekle
         </button>
       </div>
 
-      <div class="overflow-x-auto">
-        <table class="w-full text-left border-collapse text-xs">
+      <div class="overflow-x-auto -mx-4 sm:mx-0">
+        <table class="w-full text-left border-collapse text-xs min-w-[500px]">
           <thead class="bg-slate-100 text-slate-600 uppercase font-semibold">
             <tr>
-              <th class="p-3">Ürün Adı</th>
+              <th class="p-3">Ürün</th>
               <th class="p-3">Kategori</th>
-              <th class="p-3">Kalan Stok</th>
+              <th class="p-3">Kalan</th>
               <th class="p-3 text-right">İşlemler</th>
             </tr>
           </thead>
-          <tbody id="stokTablosu" class="divide-y divide-slate-100">
-            <!-- Stok listesi -->
-          </tbody>
+          <tbody id="stokTablosu" class="divide-y divide-slate-100"></tbody>
         </table>
       </div>
     </div>
 
     <!-- SON HAREKETLER (LOG) -->
-    <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm space-y-3">
-      <h2 class="text-xs font-bold text-slate-600 uppercase tracking-wider">🕒 Otomatik Stok Düşüm Geçmişi (Son Hareketler)</h2>
+    <div class="bg-white p-4 sm:p-5 rounded-2xl border border-slate-200 shadow-sm space-y-2">
+      <h2 class="text-xs font-bold text-slate-600 uppercase tracking-wider">🕒 Son Stok Düşüm Hareketleri</h2>
       <div class="overflow-x-auto">
         <table class="w-full text-left border-collapse text-xs">
-          <tbody id="logTablosu" class="divide-y divide-slate-100 text-slate-600">
-            <!-- Loglar -->
-          </tbody>
+          <tbody id="logTablosu" class="divide-y divide-slate-100 text-slate-600"></tbody>
         </table>
       </div>
     </div>
 
   </div>
 
-  <!-- DÜZENLEME PENCERESİ (MODAL) -->
+  <!-- MOBİL UYUMLU DÜZENLEME MODALI -->
   <div id="duzenleModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-xs hidden flex items-center justify-center p-4 z-50">
-    <div class="bg-white rounded-2xl max-w-md w-full p-6 shadow-2xl border border-slate-200 space-y-4">
+    <div class="bg-white rounded-2xl max-w-md w-full p-5 sm:p-6 shadow-2xl border border-slate-200 space-y-4">
       <div class="flex justify-between items-center border-b pb-3">
-        <h3 class="font-bold text-base text-slate-900">✏️ Ürün Bilgilerini Düzenle</h3>
-        <button onclick="modalKapat()" class="text-slate-400 hover:text-slate-700 font-bold text-lg">✕</button>
+        <h3 class="font-bold text-base text-slate-900">✏️ Ürün Bilgisini Düzenle</h3>
+        <button onclick="modalKapat()" class="text-slate-400 hover:text-slate-700 font-black text-xl p-1">✕</button>
       </div>
       
       <input type="hidden" id="editId">
 
-      <div class="space-y-3 text-xs">
+      <div class="space-y-3">
         <div>
-          <label class="font-semibold text-slate-600 block mb-1">Ürün Adı</label>
-          <input id="editUrunAdi" type="text" class="w-full border p-2.5 rounded-lg text-sm font-medium outline-none focus:ring-2 focus:ring-indigo-500">
+          <label class="font-semibold text-xs text-slate-600 block mb-1">Ürün Adı</label>
+          <input id="editUrunAdi" type="text" class="w-full border p-3 rounded-xl font-medium outline-none focus:ring-2 focus:ring-indigo-500">
         </div>
         <div>
-          <label class="font-semibold text-slate-600 block mb-1">Kategori</label>
-          <input id="editKategori" type="text" placeholder="Blend, 250g Etiket, Paket..." class="w-full border p-2.5 rounded-lg text-sm font-medium outline-none focus:ring-2 focus:ring-indigo-500">
+          <label class="font-semibold text-xs text-slate-600 block mb-1">Kategori</label>
+          <input id="editKategori" type="text" class="w-full border p-3 rounded-xl font-medium outline-none focus:ring-2 focus:ring-indigo-500">
         </div>
         <div class="grid grid-cols-2 gap-3">
           <div>
-            <label class="font-semibold text-slate-600 block mb-1">Mevcut Stok Miktarı</label>
-            <input id="editMiktar" type="number" step="any" class="w-full border p-2.5 rounded-lg text-sm font-bold outline-none focus:ring-2 focus:ring-indigo-500">
+            <label class="font-semibold text-xs text-slate-600 block mb-1">Stok Miktarı</label>
+            <input id="editMiktar" type="number" step="any" class="w-full border p-3 rounded-xl font-bold outline-none focus:ring-2 focus:ring-indigo-500">
           </div>
           <div>
-            <label class="font-semibold text-slate-600 block mb-1">Birim</label>
-            <input id="editBirim" type="text" placeholder="kg, adet..." class="w-full border p-2.5 rounded-lg text-sm font-bold text-indigo-700 outline-none focus:ring-2 focus:ring-indigo-500">
+            <label class="font-semibold text-xs text-slate-600 block mb-1">Birim</label>
+            <input id="editBirim" type="text" class="w-full border p-3 rounded-xl font-bold text-indigo-700 outline-none focus:ring-2 focus:ring-indigo-500">
           </div>
         </div>
       </div>
 
       <div class="flex gap-2 pt-2">
-        <button onclick="modalKapat()" class="w-1/2 py-2.5 border border-slate-300 rounded-lg text-xs font-bold text-slate-600 hover:bg-slate-50 transition">
+        <button onclick="modalKapat()" class="w-1/2 py-3 border border-slate-300 rounded-xl text-xs font-bold text-slate-600 hover:bg-slate-50">
           Vazgeç
         </button>
-        <button onclick="stokKaydet()" class="w-1/2 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg text-xs font-bold transition shadow-sm">
-          💾 Değişiklikleri Kaydet
+        <button onclick="stokKaydet()" class="w-1/2 py-3 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl text-xs font-bold shadow-sm">
+          💾 Kaydet
         </button>
       </div>
     </div>
@@ -237,15 +237,14 @@
 
     let tumSiparisler = [];
     let tumStoklar = [];
-    let seciliFormTuru = 'sirket'; // 'sirket' veya 'online'
-    let seciliListeTuru = 'sirket'; // 'sirket' veya 'online'
+    let seciliFormTuru = 'sirket';
+    let seciliListeTuru = 'sirket';
     let seciliDurumFiltre = 'hepsi';
 
     async function verileriGetir() {
       await Promise.all([siparisleriYukle(), stoklariYukle(), loglariYukle()]);
     }
 
-    // FORM TÜRÜNÜ DEĞİŞTİRME (ŞİRKET <-> ONLINE)
     function formTuruDegistir(tur) {
       seciliFormTuru = tur;
       const btnSirket = document.getElementById('formTurSirket');
@@ -253,17 +252,16 @@
       const inputFirma = document.getElementById('sipFirma');
 
       if (tur === 'sirket') {
-        btnSirket.className = "px-4 py-1.5 text-xs font-bold rounded-lg bg-white shadow-xs text-slate-900 transition";
-        btnOnline.className = "px-4 py-1.5 text-xs font-bold rounded-lg text-slate-500 hover:text-slate-900 transition";
-        inputFirma.placeholder = "Firma Adı (Örn: Lot Kafe, Macro vb.) *";
+        btnSirket.className = "py-2 px-3 text-xs font-bold rounded-lg bg-white shadow-xs text-slate-900 transition";
+        btnOnline.className = "py-2 px-3 text-xs font-bold rounded-lg text-slate-500 hover:text-slate-900 transition";
+        inputFirma.placeholder = "Firma Adı *";
       } else {
-        btnOnline.className = "px-4 py-1.5 text-xs font-bold rounded-lg bg-white shadow-xs text-slate-900 transition";
-        btnSirket.className = "px-4 py-1.5 text-xs font-bold rounded-lg text-slate-500 hover:text-slate-900 transition";
-        inputFirma.placeholder = "Müşteri İsim Soyisim (Örn: Caner Yılmaz) *";
+        btnOnline.className = "py-2 px-3 text-xs font-bold rounded-lg bg-white shadow-xs text-slate-900 transition";
+        btnSirket.className = "py-2 px-3 text-xs font-bold rounded-lg text-slate-500 hover:text-slate-900 transition";
+        inputFirma.placeholder = "Müşteri İsim Soyisim *";
       }
     }
 
-    // LİSTE TÜRÜNÜ DEĞİŞTİRME (ŞİRKET TABLOSU <-> ONLINE TABLOSU)
     function listeTuruDegistir(tur) {
       seciliListeTuru = tur;
       const btnSirket = document.getElementById('tabAnaSirket');
@@ -271,12 +269,12 @@
       const kolonBaslik = document.getElementById('kolonBaslikFirma');
 
       if (tur === 'sirket') {
-        btnSirket.className = "px-4 py-2 text-sm font-extrabold rounded-xl bg-slate-900 text-white shadow-xs transition";
-        btnOnline.className = "px-4 py-2 text-sm font-extrabold rounded-xl bg-slate-100 text-slate-600 hover:bg-slate-200 transition";
+        btnSirket.className = "py-2.5 px-4 text-xs sm:text-sm font-black rounded-xl bg-slate-900 text-white shadow-xs transition";
+        btnOnline.className = "py-2.5 px-4 text-xs sm:text-sm font-black rounded-xl bg-slate-100 text-slate-600 hover:bg-slate-200 transition";
         kolonBaslik.innerText = "FİRMA";
       } else {
-        btnOnline.className = "px-4 py-2 text-sm font-extrabold rounded-xl bg-slate-900 text-white shadow-xs transition";
-        btnSirket.className = "px-4 py-2 text-sm font-extrabold rounded-xl bg-slate-100 text-slate-600 hover:bg-slate-200 transition";
+        btnOnline.className = "py-2.5 px-4 text-xs sm:text-sm font-black rounded-xl bg-slate-900 text-white shadow-xs transition";
+        btnSirket.className = "py-2.5 px-4 text-xs sm:text-sm font-black rounded-xl bg-slate-100 text-slate-600 hover:bg-slate-200 transition";
         kolonBaslik.innerText = "MÜŞTERİ İSMİ";
       }
       siparisleriGoster();
@@ -288,17 +286,16 @@
         const btn = document.getElementById(f === 'hepsi' ? 'filtreHepsi' : f === 'Sipariş' ? 'filtreSiparis' : f === 'Paketlendi' ? 'filtrePaket' : 'filtreTeslim');
         if (btn) {
           btn.className = (seciliDurumFiltre === f)
-            ? "px-2.5 py-1 text-xs font-bold rounded-lg bg-slate-800 text-white"
-            : "px-2.5 py-1 text-xs font-bold rounded-lg bg-slate-100 text-slate-600 hover:bg-slate-200";
+            ? "px-3 py-1.5 text-xs font-bold rounded-lg bg-slate-800 text-white shrink-0"
+            : "px-3 py-1.5 text-xs font-bold rounded-lg bg-slate-100 text-slate-600 shrink-0";
         }
       });
       siparisleriGoster();
     }
 
-    // --- SİPARİŞ İŞLEMLERİ ---
     async function siparisleriYukle() {
       const { data, error } = await db.from('siparisler').select('*').order('id', { ascending: false });
-      if (error) return console.error('Sipariş getirme hatası:', error);
+      if (error) return console.error(error);
       tumSiparisler = data || [];
       siparisleriGoster();
     }
@@ -307,12 +304,9 @@
       const tablo = document.getElementById('siparisTablosu');
       tablo.innerHTML = '';
 
-      // Hem Tür (Şirket/Online) hem Durum (Tümü/Sipariş/Teslim) filtrelemesi:
       const filtrelenmis = tumSiparisler.filter(s => {
         const tur = s.siparis_turu || 'sirket';
-        const turUygun = (tur === seciliListeTuru);
-        const durumUygun = (seciliDurumFiltre === 'hepsi' || s.durum === seciliDurumFiltre);
-        return turUygun && durumUygun;
+        return (tur === seciliListeTuru) && (seciliDurumFiltre === 'hepsi' || s.durum === seciliDurumFiltre);
       });
 
       filtrelenmis.forEach(s => {
@@ -324,33 +318,32 @@
         if (isTeslim) durumRenk = "bg-emerald-100 text-emerald-800 border-emerald-300";
 
         const paketBilgisi = s.paket_urun 
-          ? `<span class="bg-indigo-50 text-indigo-700 px-2 py-0.5 rounded font-semibold border border-indigo-200">${s.paket_adet || 1}x ${s.paket_urun}</span>` 
+          ? `<span class="bg-indigo-50 text-indigo-700 px-2 py-0.5 rounded font-semibold border border-indigo-200 whitespace-nowrap">${s.paket_adet || 1}x ${s.paket_urun}</span>` 
           : '<span class="text-slate-400 text-[11px]">Otomatik</span>';
 
         tablo.innerHTML += `
-          <tr class="hover:bg-slate-50 transition border-b">
+          <tr class="hover:bg-slate-50 border-b">
             <td class="p-3 text-slate-500 whitespace-nowrap">${s.tarih}</td>
             <td class="p-3 font-bold text-slate-900">${s.firma}</td>
-            <td class="p-3 text-center font-black text-slate-800">${s.miktar_kg} ${s.birim || 'kg'}</td>
+            <td class="p-3 text-center font-black text-slate-800 whitespace-nowrap">${s.miktar_kg} ${s.birim || 'kg'}</td>
             <td class="p-3 font-semibold text-slate-700">${s.urun}</td>
             <td class="p-3">${paketBilgisi}</td>
             <td class="p-3 text-slate-500">${s.urun_tipi || '-'}</td>
             <td class="p-3 text-center">
-              <select onchange="durumDegistir(${s.id}, this.value)" class="text-xs font-bold border rounded-md px-2 py-1 ${durumRenk} outline-none cursor-pointer">
+              <select onchange="durumDegistir(${s.id}, this.value)" class="text-xs font-bold border rounded-lg px-2 py-1.5 ${durumRenk} outline-none cursor-pointer">
                 <option value="Sipariş" ${s.durum === 'Sipariş' ? 'selected' : ''}>Sipariş</option>
                 <option value="Paketlendi" ${s.durum === 'Paketlendi' ? 'selected' : ''}>Paketlendi</option>
                 <option value="Teslim edildi" ${s.durum === 'Teslim edildi' ? 'selected' : ''}>Teslim edildi</option>
               </select>
             </td>
-            <td class="p-3 text-slate-500 whitespace-nowrap">${s.hedef_teslim_tarihi || '-'}</td>
             <td class="p-3 text-center">
-              <input type="checkbox" onchange="checkboxGuncelle(${s.id}, 'fatura', this.checked)" ${s.fatura ? 'checked' : ''} class="w-4 h-4 text-red-600 rounded cursor-pointer">
+              <input type="checkbox" onchange="checkboxGuncelle(${s.id}, 'fatura', this.checked)" ${s.fatura ? 'checked' : ''} class="w-4 h-4 text-red-600 rounded">
             </td>
             <td class="p-3 text-center">
-              <input type="checkbox" onchange="checkboxGuncelle(${s.id}, 'skala', this.checked)" ${s.skala ? 'checked' : ''} class="w-4 h-4 text-red-600 rounded cursor-pointer">
+              <input type="checkbox" onchange="checkboxGuncelle(${s.id}, 'skala', this.checked)" ${s.skala ? 'checked' : ''} class="w-4 h-4 text-red-600 rounded">
             </td>
             <td class="p-3 text-right">
-              <button onclick="siparisSil(${s.id})" class="text-slate-400 hover:text-red-600 font-bold">✕</button>
+              <button onclick="siparisSil(${s.id})" class="text-slate-400 hover:text-red-600 font-bold p-1">✕</button>
             </td>
           </tr>
         `;
@@ -368,7 +361,7 @@
       const paket_adet = parseFloat(document.getElementById('sipPaketAdet').value) || 0;
 
       if (!firma || isNaN(miktar_kg) || !urun) {
-        return alert('Lütfen ' + (seciliFormTuru === 'sirket' ? 'Firma Adı' : 'Müşteri Adı') + ', Kahve ve Miktar alanlarını doldurun.');
+        return alert('Lütfen gerekli alanları eksiksiz girin.');
       }
 
       const bugun = new Date().toLocaleDateString('tr-TR');
@@ -396,14 +389,11 @@
         document.getElementById('sipHedefTarih').value = '';
         document.getElementById('sipPaketUrun').value = '';
         document.getElementById('sipPaketAdet').value = '';
-        
-        // Eklenen siparişin tablosunu otomatik göster
         listeTuruDegistir(seciliFormTuru);
         siparisleriYukle();
       }
     }
 
-    // HEM KAHVEYİ HEM ETİKETİ DÜŞÜREN ORTAK MOTOR
     async function durumDegistir(id, yeniDurum) {
       const sip = tumSiparisler.find(x => x.id === id);
       if (!sip) return;
@@ -411,18 +401,15 @@
       if (yeniDurum === 'Teslim edildi' && !sip.stok_dustu_mu) {
         let bilgilendirme = `✅ "${sip.firma}" teslimatı tamamlandı!\n`;
 
-        // 1. KAHVE DÜŞÜMÜ
+        // 1. Kahve Stok Düşümü
         const eslesenKahve = tumStoklar.find(s => s.urun_adi.toLowerCase().trim() === sip.urun.toLowerCase().trim());
         if (eslesenKahve) {
           let dusulecekKahveMiktar = sip.miktar_kg;
           const stokBirimi = (eslesenKahve.birim || 'kg').toLowerCase();
           const sipBirimi = (sip.birim || 'kg').toLowerCase();
 
-          if (sipBirimi === 'gr' && stokBirimi === 'kg') {
-            dusulecekKahveMiktar = sip.miktar_kg / 1000;
-          } else if (sipBirimi === 'kg' && stokBirimi === 'gr') {
-            dusulecekKahveMiktar = sip.miktar_kg * 1000;
-          }
+          if (sipBirimi === 'gr' && stokBirimi === 'kg') dusulecekKahveMiktar = sip.miktar_kg / 1000;
+          else if (sipBirimi === 'kg' && stokBirimi === 'gr') dusulecekKahveMiktar = sip.miktar_kg * 1000;
 
           const yeniKahveStok = eslesenKahve.miktar - dusulecekKahveMiktar;
           await db.from('stoklar').update({ miktar: yeniKahveStok }).eq('id', eslesenKahve.id);
@@ -433,23 +420,18 @@
             miktar: dusulecekKahveMiktar
           }]);
 
-          bilgilendirme += `• Kahve: "${eslesenKahve.urun_adi}" stoğundan ${dusulecekKahveMiktar} ${eslesenKahve.birim || 'kg'} düşüldü.\n`;
+          bilgilendirme += `• Kahve: -${dusulecekKahveMiktar} ${eslesenKahve.birim || 'kg'}\n`;
         }
 
-        // 2. 250G ETİKET OTOMATİK TESPİTİ VE DÜŞÜMÜ
+        // 2. 250g Otomatik Etiket Düşümü
         let hedefPaketAdi = sip.paket_urun;
         let hedefPaketAdet = sip.paket_adet || 0;
-
         const toplamGram = (sip.birim === 'gr') ? sip.miktar_kg : (sip.miktar_kg * 1000);
         const is250gSiparisi = (sip.birim === 'gr') || sip.urun.toLowerCase().includes('250');
 
         if (!hedefPaketAdi && is250gSiparisi) {
           const urunAdiTemiz = sip.urun.toLowerCase().replace('250g', '').replace('250 gr', '').replace('paket', '').trim();
-          
-          const eslesenEtiket = tumStoklar.find(s => {
-            const stokAdi = s.urun_adi.toLowerCase();
-            return stokAdi.includes('etiket') && stokAdi.includes(urunAdiTemiz);
-          });
+          const eslesenEtiket = tumStoklar.find(s => s.urun_adi.toLowerCase().includes('etiket') && s.urun_adi.toLowerCase().includes(urunAdiTemiz));
 
           if (eslesenEtiket) {
             hedefPaketAdi = eslesenEtiket.urun_adi;
@@ -469,7 +451,7 @@
               miktar: hedefPaketAdet
             }]);
 
-            bilgilendirme += `• Etiket: "${eslesenPaket.urun_adi}" stoğundan ${hedefPaketAdet} adet düşüldü.`;
+            bilgilendirme += `• Etiket: -${hedefPaketAdet} adet (${eslesenPaket.urun_adi})`;
           }
         }
 
@@ -493,12 +475,11 @@
     }
 
     async function siparisSil(id) {
-      if (!confirm('Bu siparişi silmek istediğinize emin misiniz?')) return;
+      if (!confirm('Siparişi silmek istediğinize emin misiniz?')) return;
       await db.from('siparisler').delete().eq('id', id);
       siparisleriYukle();
     }
 
-    // --- STOK İŞLEMLERİ ---
     async function stoklariYukle() {
       const { data } = await db.from('stoklar').select('*').order('urun_adi', { ascending: true });
       tumStoklar = data || [];
@@ -536,17 +517,17 @@
         if (s.kritik_seviye && s.miktar <= s.kritik_seviye) kritikSayi++;
 
         tablo.innerHTML += `
-          <tr class="hover:bg-slate-50 transition">
+          <tr class="hover:bg-slate-50">
             <td class="p-3 font-bold text-slate-800">${s.urun_adi}</td>
             <td class="p-3 text-slate-500">${s.kategori || '-'}</td>
-            <td class="p-3 font-black text-slate-900 text-sm">
-              ${s.miktar} <span class="text-xs font-bold text-indigo-600 bg-indigo-50 px-2 py-0.5 rounded border border-indigo-200">${s.birim || 'kg'}</span>
+            <td class="p-3 font-black text-slate-900 whitespace-nowrap">
+              ${s.miktar} <span class="text-[11px] font-bold text-indigo-600 bg-indigo-50 px-1.5 py-0.5 rounded border border-indigo-200">${s.birim || 'kg'}</span>
             </td>
-            <td class="p-3 text-right space-x-1.5 whitespace-nowrap">
-              <button onclick="stokManuelAyar(${s.id}, ${s.miktar + 5})" class="px-2 py-1 bg-slate-100 hover:bg-slate-200 rounded font-bold text-xs text-slate-700">+5</button>
-              <button onclick="stokManuelAyar(${s.id}, ${s.miktar - 5})" class="px-2 py-1 bg-slate-100 hover:bg-slate-200 rounded font-bold text-xs text-slate-700">-5</button>
-              <button onclick="modalAc(${s.id})" class="px-2.5 py-1 bg-indigo-50 hover:bg-indigo-100 text-indigo-700 border border-indigo-200 rounded font-semibold text-xs">✏️ Düzenle</button>
-              <button onclick="stokKalemiSil(${s.id}, '${s.urun_adi}')" class="px-2 py-1 bg-red-50 hover:bg-red-100 text-red-600 border border-red-200 rounded font-bold text-xs">🗑️</button>
+            <td class="p-3 text-right space-x-1 whitespace-nowrap">
+              <button onclick="stokManuelAyar(${s.id}, ${s.miktar + 5})" class="px-2 py-1 bg-slate-100 rounded font-bold text-xs text-slate-700 active:bg-slate-300">+5</button>
+              <button onclick="stokManuelAyar(${s.id}, ${s.miktar - 5})" class="px-2 py-1 bg-slate-100 rounded font-bold text-xs text-slate-700 active:bg-slate-300">-5</button>
+              <button onclick="modalAc(${s.id})" class="px-2.5 py-1 bg-indigo-50 text-indigo-700 border border-indigo-200 rounded font-semibold text-xs active:bg-indigo-100">✏️ Düzenle</button>
+              <button onclick="stokKalemiSil(${s.id}, '${s.urun_adi}')" class="px-2 py-1 bg-red-50 text-red-600 border border-red-200 rounded font-bold text-xs active:bg-red-100">🗑️</button>
             </td>
           </tr>
         `;
@@ -554,7 +535,7 @@
 
       const sayac = document.getElementById('kritikSayac');
       if (kritikSayi > 0) {
-        sayac.innerText = `⚠️ ${kritikSayi} Ürün Kritik`;
+        sayac.innerText = `⚠️ ${kritikSayi} Kritik`;
         sayac.classList.remove('hidden');
       } else {
         sayac.classList.add('hidden');
@@ -585,16 +566,9 @@
       const miktar = parseFloat(document.getElementById('editMiktar').value);
       const birim = document.getElementById('editBirim').value.trim();
 
-      if (!urun_adi || isNaN(miktar)) {
-        return alert('Ürün adı ve miktar boş bırakılamaz.');
-      }
+      if (!urun_adi || isNaN(miktar)) return alert('Ürün adı ve miktar zorunludur.');
 
-      const { error } = await db.from('stoklar').update({
-        urun_adi,
-        kategori,
-        miktar,
-        birim
-      }).eq('id', id);
+      const { error } = await db.from('stoklar').update({ urun_adi, kategori, miktar, birim }).eq('id', id);
 
       if (error) alert('Hata: ' + error.message);
       else {
@@ -604,7 +578,7 @@
     }
 
     async function stokKalemiSil(id, urunAdi) {
-      if (!confirm(`"${urunAdi}" kaydını tamamen silmek istediğinize emin misiniz?`)) return;
+      if (!confirm(`"${urunAdi}" silinsin mi?`)) return;
       await db.from('stoklar').delete().eq('id', id);
       stoklariYukle();
     }
@@ -630,7 +604,6 @@
       stoklariYukle();
     }
 
-    // --- LOG İŞLEMLERİ ---
     async function loglariYukle() {
       const { data } = await db.from('stok_hareketleri').select('*').order('id', { ascending: false }).limit(6);
       const tablo = document.getElementById('logTablosu');
