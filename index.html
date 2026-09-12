@@ -31,7 +31,7 @@
     <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm space-y-4">
       <h2 class="text-sm font-bold text-red-600 uppercase tracking-wider flex items-center justify-between">
         <span>📋 Yeni Sipariş Ekle</span>
-        <span class="text-[11px] font-normal text-slate-400">Kahve ve Paket Stoklarını Otomatik Bağlar</span>
+        <span class="text-[11px] font-normal text-emerald-600 font-semibold">✨ 250g siparişlerde etiketler otomatik düşer</span>
       </h2>
       
       <!-- 1. Satır: Müşteri & Kahve Bilgisi -->
@@ -39,33 +39,33 @@
         <input id="sipFirma" type="text" placeholder="Firma Adı *" class="border border-slate-200 p-2.5 rounded-lg text-sm font-medium focus:ring-2 focus:ring-red-500 outline-none">
         
         <!-- Kahve Seçimi -->
-        <input id="sipUrun" list="kahveListesi" placeholder="Kahve Adı (ESP-R, Lot 02 vb.) *" class="border border-slate-200 p-2.5 rounded-lg text-sm font-medium focus:ring-2 focus:ring-red-500 outline-none">
+        <input id="sipUrun" list="kahveListesi" placeholder="Kahve Adı (Levi, Gakuyini vb.) *" class="border border-slate-200 p-2.5 rounded-lg text-sm font-medium focus:ring-2 focus:ring-red-500 outline-none">
         <datalist id="kahveListesi"></datalist>
 
         <!-- Miktar ve Birim (kg / gr) -->
         <div class="flex gap-1.5">
           <input id="sipMiktar" type="number" step="any" placeholder="Miktar *" class="w-2/3 border border-slate-200 p-2.5 rounded-lg text-sm font-bold focus:ring-2 focus:ring-red-500 outline-none">
           <select id="sipBirim" class="w-1/3 border border-slate-200 p-2.5 rounded-lg text-sm font-bold bg-slate-50 outline-none cursor-pointer">
-            <option value="kg">kg</option>
             <option value="gr">gr</option>
+            <option value="kg">kg</option>
           </select>
         </div>
 
-        <input id="sipTip" type="text" placeholder="Ürün Tipi (Çekirdek, Filtre vb.)" class="border border-slate-200 p-2.5 rounded-lg text-sm focus:ring-2 focus:ring-red-500 outline-none">
+        <input id="sipTip" type="text" placeholder="Öğütüm / Tip (Çekirdek, Filtre)" class="border border-slate-200 p-2.5 rounded-lg text-sm focus:ring-2 focus:ring-red-500 outline-none">
         <input id="sipHedefTarih" type="text" placeholder="Hedef Teslim (Örn: 14.09)" class="border border-slate-200 p-2.5 rounded-lg text-sm focus:ring-2 focus:ring-red-500 outline-none">
       </div>
 
-      <!-- 2. Satır: Sadece Adetli Ambalaj/Paket Seçimi -->
+      <!-- 2. Satır: Manuel Paket Seçimi (İsteğe Bağlı) -->
       <div class="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-5 gap-3 pt-1 border-t border-slate-100 items-center">
         <div class="sm:col-span-2">
-          <label class="block text-[11px] font-bold text-slate-500 mb-1">📦 Kullanılacak Paket / Ambalaj (Sadece Adetli Ürünler)</label>
+          <label class="block text-[11px] font-bold text-slate-500 mb-1">📦 Özel Ambalaj / Kutu Seçimi (Boş bırakırsan etiket otomatik düşer)</label>
           <select id="sipPaketUrun" class="w-full border border-slate-200 p-2 rounded-lg text-xs font-semibold bg-slate-50 outline-none cursor-pointer">
-            <option value="">-- Paket Düşümü Yapma (Sadece Kahve) --</option>
+            <option value="">-- Otomatik Eşleştir (250g Etiketi Sistem Bulsun) --</option>
           </select>
         </div>
         <div>
-          <label class="block text-[11px] font-bold text-slate-500 mb-1">Paket Adedi</label>
-          <input id="sipPaketAdet" type="number" min="0" placeholder="Örn: 1, 4, 20" class="w-full border border-slate-200 p-2 rounded-lg text-xs font-bold outline-none">
+          <label class="block text-[11px] font-bold text-slate-500 mb-1">Manuel Adet</label>
+          <input id="sipPaketAdet" type="number" min="0" placeholder="Boş = Otomatik" class="w-full border border-slate-200 p-2 rounded-lg text-xs font-bold outline-none">
         </div>
         <div class="sm:col-span-3 lg:col-span-2 flex items-end">
           <button onclick="siparisEkle()" class="w-full bg-red-600 hover:bg-red-700 text-white rounded-lg text-sm font-bold transition shadow-sm py-2.5 mt-auto">
@@ -95,7 +95,7 @@
               <th class="p-3">Firma</th>
               <th class="p-3 text-center">Miktar</th>
               <th class="p-3">Ürün</th>
-              <th class="p-3">Bağlı Ambalaj</th>
+              <th class="p-3">Düşen Etiket / Paket</th>
               <th class="p-3">Ürün Tipi</th>
               <th class="p-3 text-center">Teslim Durumu</th>
               <th class="p-3">Hedef</th>
@@ -116,7 +116,7 @@
       <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 border-b pb-4">
         <div>
           <h2 class="text-base font-bold text-slate-900">⚖️ Güncel Depo Stokları</h2>
-          <p class="text-xs text-slate-500">Çekirdekler ve Ambalajlar (Teslim edilen siparişler bu listeden otomatik düşer)</p>
+          <p class="text-xs text-slate-500">Çekirdekler ve 250g Etiketler</p>
         </div>
         <div class="flex gap-2 w-full sm:w-auto">
           <input id="stokArama" oninput="stoklariGoster()" type="text" placeholder="Stokta ara..." class="border p-2 rounded-lg text-xs w-full sm:w-48 outline-none focus:ring-2 focus:ring-slate-400">
@@ -125,8 +125,8 @@
 
       <!-- Yeni Stok Kalemi Ekleme Formu -->
       <div class="grid grid-cols-2 md:grid-cols-5 gap-2 bg-slate-50 p-3 rounded-lg border border-slate-200">
-        <input id="stokAd" type="text" placeholder="Ürün Adı (ESP-R, Leone Paket)" class="border p-2 rounded text-xs outline-none">
-        <input id="stokKategori" type="text" placeholder="Kategori (Blend, Ambalaj vb.)" class="border p-2 rounded text-xs outline-none">
+        <input id="stokAd" type="text" placeholder="Ürün Adı (ESP-R, Valfli Paket)" class="border p-2 rounded text-xs outline-none">
+        <input id="stokKategori" type="text" placeholder="Kategori (Blend, 250g Etiket)" class="border p-2 rounded text-xs outline-none">
         <input id="stokMiktar" type="number" step="any" placeholder="Miktar" class="border p-2 rounded text-xs outline-none">
         <input id="stokBirim" type="text" placeholder="Birim (kg, adet)" value="kg" class="border p-2 rounded text-xs outline-none">
         <button onclick="yeniStokEkle()" class="col-span-2 md:col-span-1 bg-slate-900 hover:bg-slate-800 text-white rounded text-xs font-bold py-2 transition">
@@ -165,7 +165,7 @@
 
   </div>
 
-  <!-- HER ÜRÜN İÇİN DETAYLI DÜZENLEME PENCERESİ (MODAL) -->
+  <!-- MODAL DÜZENLEME -->
   <div id="duzenleModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-xs hidden flex items-center justify-center p-4 z-50">
     <div class="bg-white rounded-2xl max-w-md w-full p-6 shadow-2xl border border-slate-200 space-y-4">
       <div class="flex justify-between items-center border-b pb-3">
@@ -182,7 +182,7 @@
         </div>
         <div>
           <label class="font-semibold text-slate-600 block mb-1">Kategori</label>
-          <input id="editKategori" type="text" placeholder="Blend, Single, Ambalaj vb." class="w-full border p-2.5 rounded-lg text-sm font-medium outline-none focus:ring-2 focus:ring-indigo-500">
+          <input id="editKategori" type="text" placeholder="Blend, 250g Etiket, Paket..." class="w-full border p-2.5 rounded-lg text-sm font-medium outline-none focus:ring-2 focus:ring-indigo-500">
         </div>
         <div class="grid grid-cols-2 gap-3">
           <div>
@@ -255,7 +255,7 @@
         if (isPaket) durumRenk = "bg-blue-100 text-blue-800 border-blue-300";
         if (isTeslim) durumRenk = "bg-emerald-100 text-emerald-800 border-emerald-300";
 
-        const paketBilgisi = s.paket_urun ? `<span class="bg-indigo-50 text-indigo-700 px-2 py-0.5 rounded font-semibold border border-indigo-200">${s.paket_adet || 1}x ${s.paket_urun}</span>` : '<span class="text-slate-400">-</span>';
+        const paketBilgisi = s.paket_urun ? `<span class="bg-indigo-50 text-indigo-700 px-2 py-0.5 rounded font-semibold border border-indigo-200">${s.paket_adet || 1}x ${s.paket_urun}</span>` : '<span class="text-slate-400 text-[11px]">Otomatik</span>';
 
         tablo.innerHTML += `
           <tr class="hover:bg-slate-50 transition border-b">
@@ -329,6 +329,7 @@
       }
     }
 
+    // HEM KAHVEYİ HEM 250G ETİKETİ OTOMATİK DÜŞÜREN AKILLI FONKSİYON
     async function durumDegistir(id, yeniDurum) {
       const sip = tumSiparisler.find(x => x.id === id);
       if (!sip) return;
@@ -336,7 +337,7 @@
       if (yeniDurum === 'Teslim edildi' && !sip.stok_dustu_mu) {
         let bilgilendirme = `✅ "${sip.firma}" sevkiyatı tamamlandı!\n`;
 
-        // Kahve Stok Düşümü
+        // 1. KAHVE DÜŞÜMÜ
         const eslesenKahve = tumStoklar.find(s => s.urun_adi.toLowerCase().trim() === sip.urun.toLowerCase().trim());
         if (eslesenKahve) {
           let dusulecekKahveMiktar = sip.miktar_kg;
@@ -361,24 +362,53 @@
           bilgilendirme += `• Kahve: "${eslesenKahve.urun_adi}" stoğundan ${dusulecekKahveMiktar} ${eslesenKahve.birim || 'kg'} düşüldü.\n`;
         }
 
-        // Ambalaj Stok Düşümü
-        if (sip.paket_urun && sip.paket_adet > 0) {
-          const eslesenPaket = tumStoklar.find(s => s.urun_adi.toLowerCase().trim() === sip.paket_urun.toLowerCase().trim());
+        // 2. OTOMATİK 250G ETİKET VE PAKET TESPİTİ
+        let hedefPaketAdi = sip.paket_urun;
+        let hedefPaketAdet = sip.paket_adet || 0;
+
+        // Eğer kullanıcı manuel paket seçmediyse, sistem otomatik etiket eşleştirir:
+        const toplamGram = (sip.birim === 'gr') ? sip.miktar_kg : (sip.miktar_kg * 1000);
+        const is250gSiparisi = (sip.birim === 'gr') || sip.urun.toLowerCase().includes('250');
+
+        if (!hedefPaketAdi && is250gSiparisi) {
+          const urunAdiTemiz = sip.urun.toLowerCase().replace('250g', '').replace('250 gr', '').replace('paket', '').trim();
+          
+          const eslesenEtiket = tumStoklar.find(s => {
+            const stokAdi = s.urun_adi.toLowerCase();
+            return stokAdi.includes('etiket') && stokAdi.includes(urunAdiTemiz);
+          });
+
+          if (eslesenEtiket) {
+            hedefPaketAdi = eslesenEtiket.urun_adi;
+            hedefPaketAdet = Math.max(1, Math.round(toplamGram / 250));
+          }
+        }
+
+        // Paketi/Etiketi Stoktan Düş
+        if (hedefPaketAdi && hedefPaketAdet > 0) {
+          const eslesenPaket = tumStoklar.find(s => s.urun_adi.toLowerCase().trim() === hedefPaketAdi.toLowerCase().trim());
           if (eslesenPaket) {
-            const yeniPaketStok = eslesenPaket.miktar - sip.paket_adet;
+            const yeniPaketStok = eslesenPaket.miktar - hedefPaketAdet;
             await db.from('stoklar').update({ miktar: yeniPaketStok }).eq('id', eslesenPaket.id);
 
             await db.from('stok_hareketleri').insert([{
               urun_adi: eslesenPaket.urun_adi,
-              islem: `Ambalaj Sevkiyat (${sip.firma})`,
-              miktar: sip.paket_adet
+              islem: `Otomatik Etiket Düşümü (${sip.firma})`,
+              miktar: hedefPaketAdet
             }]);
 
-            bilgilendirme += `• Paket: "${eslesenPaket.urun_adi}" stoğundan ${sip.paket_adet} adet düşüldü.`;
+            bilgilendirme += `• Etiket: "${eslesenPaket.urun_adi}" stoğundan ${hedefPaketAdet} adet düşüldü.`;
           }
         }
 
-        await db.from('siparisler').update({ durum: yeniDurum, stok_dustu_mu: true }).eq('id', id);
+        // Siparişi tamamlandı olarak işaretle ve düşen paketi sipariş tablosuna da kaydet
+        await db.from('siparisler').update({ 
+          durum: yeniDurum, 
+          stok_dustu_mu: true,
+          paket_urun: hedefPaketAdi || null,
+          paket_adet: hedefPaketAdet > 0 ? hedefPaketAdet : null
+        }).eq('id', id);
+
         alert(bilgilendirme);
       } else {
         await db.from('siparisler').update({ durum: yeniDurum }).eq('id', id);
@@ -405,19 +435,20 @@
       dropdownlariGuncelle();
     }
 
-    // PAKET LİSTESİNDE SADECE 'ADET' BİRİMLİ ÜRÜNLERİ LİSTELEYEN FONKSİYON
     function dropdownlariGuncelle() {
       const kahveDataList = document.getElementById('kahveListesi');
       const paketSelect = document.getElementById('sipPaketUrun');
 
       kahveDataList.innerHTML = '';
-      paketSelect.innerHTML = '<option value="">-- Paket Düşümü Yapma (Sadece Kahve) --</option>';
+      paketSelect.innerHTML = '<option value="">-- Otomatik Eşleştir (250g Etiketi Sistem Bulsun) --</option>';
 
       tumStoklar.forEach(s => {
-        // Kahve adı tamamlama için tüm kahveler/ürünler
-        kahveDataList.innerHTML += `<option value="${s.urun_adi}">`;
+        // Çekirdek kahveleri öneriye ekle
+        if (!s.urun_adi.toLowerCase().includes('etiket')) {
+          kahveDataList.innerHTML += `<option value="${s.urun_adi}">`;
+        }
 
-        // Kullanılacak Paket filtresi: SADECE 'adet' olanları ekle
+        // Sadece adetli ürünleri opsiyonel ambalaj listesine ekle
         const birim = (s.birim || '').toLowerCase().trim();
         if (birim === 'adet') {
           paketSelect.innerHTML += `<option value="${s.urun_adi}">${s.urun_adi} (Kalan: ${s.miktar} adet)</option>`;
@@ -461,7 +492,6 @@
       }
     }
 
-    // --- DÜZENLEME PENCERESİ (MODAL) ---
     function modalAc(id) {
       const urun = tumStoklar.find(u => u.id === id);
       if (!urun) return;
@@ -497,9 +527,8 @@
         birim
       }).eq('id', id);
 
-      if (error) {
-        alert('Hata: ' + error.message);
-      } else {
+      if (error) alert('Hata: ' + error.message);
+      else {
         modalKapat();
         stoklariYukle();
       }
