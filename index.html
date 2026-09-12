@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sirket Stok Takip Sistemi</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body class="bg-slate-50 text-slate-800 p-6">
+
+  <div class="max-w-5xl mx-auto space-y-6">
+    <!-- Baslik ve Özet Sayaçlar -->
+    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 border-b pb-4">
+      <div>
+        <h1 class="text-2xl font-bold text-slate-900">?? Depo & Stok Kontrol Paneli</h1>
+        <p class="text-xs text-slate-500 mt-1">Canli Envanter Takip Sistemi</p>
+      </div>
+      <div class="flex gap-2">
+        <span id="kritikSayac" class="text-xs font-semibold px-3 py-1.5 bg-red-100 text-red-700 rounded-lg hidden">
+          ?? 0 Ürün Kritik Seviyede
+        </span>
+        <span class="text-xs font-semibold px-3 py-1.5 bg-emerald-100 text-emerald-700 rounded-lg">
+          ? Sistem Aktif
+        </span>
+      </div>
+    </div>
+
+    <!-- Yeni Ürün Ekleme Karti -->
+    <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm space-y-4">
+      <h2 class="text-base font-semibold text-slate-800">Yeni Ürün / Stok Girisi</h2>
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3">
+        <input id="ad" type="text" placeholder="Ürün Adi *" class="border border-slate-200 p-2.5 rounded-lg text-sm focus:outline-indigo-500">
+        <input id="kategori" type="text" placeholder="Kategori (Örn: Çekirdek, Ambalaj)" class="border border-slate-200 p-2.5 rounded-lg text-sm focus:outline-indigo-500">
+        <input id="miktar" type="number" step="any" placeholder="Mevcut Miktar *" class="border border-slate-200 p-2.5 rounded-lg text-sm focus:outline-indigo-500">
+        <input id="birim" type="text" placeholder="Birim (kg, adet, paket)" class="border border-slate-200 p-2.5 rounded-lg text-sm focus:outline-indigo-500">
+        <input id="kritik" type="number" step="any" placeholder="Kritik Uyari Esigi" class="border border-red-200 bg-red-50/30 p-2.5 rounded-lg text-sm focus:outline-red-500" title="Stok bu sayinin altina düserse sistem alarm verir">
+      </div>
+      <button onclick="urunEkle()" class="w-full sm:w-auto px-6 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg text-sm font-medium transition shadow-sm">
+        + Ürünü Envantere Ekle
+      </button>
+    </div>
+
+    <!-- Stok Listesi -->
+    <div class="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
+      <div class="overflow-x-auto">
+        <table class="w-full text-left border-collapse">
+          <thead class="bg-slate-100 text-slate-600 text-xs uppercase font-semibold">
+            <tr>
+              <th class="p-4">Durum</th>
+              <th class="p-4">Ürün Adi</th>
+              <th class="p-4">Kategori</th>
+              <th class="p-4">Mevcut Stok</th>
+              <th class="p-4">Kritik Esik</th>
+              <th class="p-4 text-right">Islemler</th>
+            </tr>
+          </thead>
+          <tbody id="stokTablosu" class="divide-y divide-slate-100 text-sm">
+            <!-- Dinamik veriler -->
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const SUPABASE_URL = 'BURAYA_SUPABASE_URL_YAPISTIR';
+    const SUPABASE_KEY = 'BURAYA_ANON_KEY_YAPISTIR';
+    const db = supabase.createClient(sb_publishable_kJhrwGIetiN9Aa_TpzqAVw_wo8Zwd2w);
+
+    async function stoklariGetir() {
+      const { data, error } = await db.from('stoklar').select('*').order('id', { ascending: false });
+      if (error) return console.error('Veri çekme hatasi:', error);
+
+      const tablo = document.getElementById('stokTablosu');
+      const sayac = document.getElementById('kritikSayac');
+      tablo.innerHTML = '';
+
+      let kritikAdet = 0;
+
+      data.forEach(item => {
+        const kritikSinir = item.kritik_seviye !== null ? Number(item.kritik_seviye) : null;
+        const suankiMiktar = Number(item.miktar);
+        const isKritik = kritikSinir !== null && suankiMiktar <= kritikSinir;
+
+        if (isKritik) kritikAdet++;
+
+        tablo.innerHTML += `
+          <tr class="hover:bg-slate-50 transition ${isKritik ? 'bg-red-50/40' : ''}">
+            <td class="p-4">
+              ${isKritik 
+                ? `<span class="inline-flex items-center gap-1 text-xs font-bold text-red-700 bg-red-100 px-2.5 py-1 rounded-full border border-red-200 animate-pulse">
+                     ?? Kritik Stok
+                   </span>`
+                : `<span class="inline-flex items-center gap-1 text-xs font-medium text-emerald-700 bg-emerald-50 px-2.5 py-1 rounded-full border border-emerald-200">
+                     ? Yeterli
+                   </span>`
+              }
+            </td>
+            <td class="p-4 font-semibold text-slate-900">${item.urun_adi}</td>
+            <td class="p-4 text-slate-500">${item.kategori || '-'}</td>
+            <td class="p-4 font-bold ${isKritik ? 'text-red-600' : 'text-slate-800'}">
+              ${item.miktar} <span class="text-xs font-normal text-slate-500">${item.birim || ''}</span>
+            </td>
+            <td class="p-4 text-slate-500 text-xs">
+              ${kritikSinir !== null ? `${kritikSinir} ${item.birim || ''}` : '-'}
+            </td>
+            <td class="p-4 space-x-1 text-right whitespace-nowrap">
+              <button onclick="miktarGuncelle(${item.id}, ${suankiMiktar + 1})" class="px-2.5 py-1 bg-slate-100 hover:bg-slate-200 rounded font-bold text-slate-700 text-xs">+1</button>
+              <button onclick="miktarGuncelle(${item.id}, ${suankiMiktar - 1})" class="px-2.5 py-1 bg-slate-100 hover:bg-slate-200 rounded font-bold text-slate-700 text-xs">-1</button>
+              <button onclick="urunSil(${item.id})" class="text-red-500 hover:text-red-700 text-xs font-semibold ml-3">Sil</button>
+            </td>
+          </tr>
+        `;
+      });
+
+      if (kritikAdet > 0) {
+        sayac.innerText = `?? ${kritikAdet} Ürün Kritik Seviyede!`;
+        sayac.classList.remove('hidden');
+      } else {
+        sayac.classList.add('hidden');
+      }
+    }
+
+    async function urunEkle() {
+      const urun_adi = document.getElementById('ad').value.trim();
+      const kategori = document.getElementById('kategori').value.trim();
+      const miktar = parseFloat(document.getElementById('miktar').value);
+      const birim = document.getElementById('birim').value.trim();
+      const kritik_seviye = document.getElementById('kritik').value ? parseFloat(document.getElementById('kritik').value) : null;
+
+      if (!urun_adi || isNaN(miktar)) {
+        return alert('Lütfen en azindan Ürün Adi ve Mevcut Miktar alanlarini doldurun.');
+      }
+
+      const { error } = await db.from('stoklar').insert([{ urun_adi, kategori, miktar, birim, kritik_seviye }]);
+      if (error) {
+        alert('Hata: ' + error.message);
+      } else {
+        document.getElementById('ad').value = '';
+        document.getElementById('kategori').value = '';
+        document.getElementById('miktar').value = '';
+        document.getElementById('birim').value = '';
+        document.getElementById('kritik').value = '';
+        stoklariGetir();
+      }
+    }
+
+    async function miktarGuncelle(id, yeniMiktar) {
+      if (yeniMiktar < 0) return;
+      await db.from('stoklar').update({ miktar: yeniMiktar }).eq('id', id);
+      stoklariGetir();
+    }
+
+    async function urunSil(id) {
+      if (confirm('Bu kaydi envanterden silmek istediginize emin misiniz?')) {
+        await db.from('stoklar').delete().eq('id', id);
+        stoklariGetir();
+      }
+    }
+
+    stoklariGetir();
+  </script>
+</body>
+</html>
